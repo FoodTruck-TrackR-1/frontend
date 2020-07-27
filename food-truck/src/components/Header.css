@@ -1,0 +1,27 @@
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f6e7f7;
+}
+.nav-bar h1 {
+  padding: 2%;
+}
+.nav-bar > ul {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 6%;
+  padding: 2%;
+}
+
+.nav-bar li {
+  list-style: none;
+  margin-right: 6px;
+  color: #204963;
+}
+
+.nav-bar a {
+  text-decoration: none;
+  padding: 6px;
+  color: #204963;
+}
