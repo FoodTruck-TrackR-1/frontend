@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as yup from 'yup';
+import axios from 'axios';
 import styled from 'styled-components';
 
 import formSchema from './formSchema';
+import Axios from "axios";
 
 const FormContainer = styled.div `
   display: flex;
@@ -38,7 +40,6 @@ const initErrorValues = {
 }
 
 const initBtnDisable = true;
-const initPassDisable = true;
 
 const Signup = () => {
   const [formValues, setFormValues] = useState(initFormValues);
@@ -96,6 +97,26 @@ const Signup = () => {
       });
   };
 
+  const onSubmit = (evt) => {
+    evt.preventDefault()
+
+    const newUser = {
+      name: formValues.name.trim(),
+      username: formValues.username.trim(),
+      password: formValues.password.trim(),
+      userType: formValues.accountType
+    }
+
+    axios.post('https://foodtruck-bw.herokuapp.com/api/auth/register', newUser)
+      .then(res => {
+        alert("User account has been created, thank you!");
+        setFormValues(initFormValues);
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+  }
+
   useEffect(() => {
     formSchema.isValid(formValues)
       .then(valid => {
@@ -126,7 +147,7 @@ const Signup = () => {
 
   return (
     <FormContainer className='container'>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className='form-header'>
           <p>Welcome to<br/>Foodtruck TrackR</p>
           <h2>Sign Up</h2>
