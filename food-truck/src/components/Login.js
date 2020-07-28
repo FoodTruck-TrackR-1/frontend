@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react"
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import axios from 'axios'
+import * as yup from 'yup'
 
+//styles//
 const FormContainer = styled.div `
   display: flex;
   flex-direction: column;
-  
+  margin: 5% 35%;
+  padding: 10px;
 
   .header {
     text-align: center;
@@ -14,43 +19,99 @@ const FormContainer = styled.div `
     flex-direction: column;
     width: 30%;
     margin: 0 auto;
-    
   }
-`;
+`
+
+
+const initialFormValues = {
+  username: '',
+  password: '',
+}
+
+
 
 const Login = () => {
+  
+const [login, setLogin] = useState(initialFormValues)
+const [disable,setDisable] = useState(true)
+const [errors, setErrors] = useState(initialFormValues)
+// const history = useHistory()
+
+
+
+const formSchema = yup.object().shape({
+  username: yup.string().required('please enter valid username'),
+  password: yup.string().required('please enter password')
+  //how do i ensure username is a valid username?//
+})
+
+useEffect(() => {
+  formSchema.isValid(login)
+    .then(valid => setDisable(!valid))
+},[login])
+
+const validateForm = (e) => {
+  yup
+  .reach(login, 'username')
+  .validate(e.target.value)
+  .then(() => setErrors({...errors, [e.target.username]: ''}))
+  .catch( err => setErrors({...errors, [e.target.username]: err.errors}))
+}
+
+const handleChange = (e) => {
+  const name = e.target.name
+  const value = e.target.value
+  setLogin({...login,[name]: value})
+
+};
+// const handleLogin = (e) => {
+//   e.preventDefault()
+//   axiosWithAuth()
+  //   .post("/api/auth/login", login)
+  //   .then((res) => {
+        // history.push('/food')
+  //   })
+  //   .catch((err) => console.log('not working', err))
+  // }
+  //(dont forget to add onSubmit={handleLogin} to <form>)
+
+console.log(login)
   return (
     <FormContainer className='container'>
-      <form>
+      <form >
+        {errors.username.length > 0 && <p>{errors.username}</p>}
         <div className='header'>
           <p>Welcome to<br/>Foodtruck TrackR</p>
           <h2>Login</h2>
         </div>
         <div className='inputs'>
           <label>
-          username:
-          <input 
+          Username:
+          <input  
             name='username'
+            value={login.username}
             type='textbox'
+            onChange={handleChange}
             />
           </label>
           <label>
-            passord:
+            Password:
             <input
-            name='username'
+            name='password'
+            value={login.password}
             type='password'
-            placeholder='name@email.com'
+            onChange={handleChange}
             />
           </label>
           <label>
             Login as:
-            <select name='user'>
-              <option value='operator'>-Select accout type-</option>
+            <select name='user' value={login.user} onChange={handleChange}>
+              <option value=''>-Select accout type-</option>
               <option value='operator'>Truck Owner</option>
               <option value='diner'>User</option>
             </select>
           </label>
-          <button type='submit'>Login</button>
+          <button disabled={disable} type='submit'>Login</button>
           </div>
       </form>
     </FormContainer>
