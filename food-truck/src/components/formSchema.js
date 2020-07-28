@@ -16,9 +16,8 @@ const formSchema = yup.object().shape({
     validPassword: yup
       .string()
       .required("Confirm your password"),
-    accountType: yup
-      .string()
-      .oneOf(['diner', 'operator'], "You must choose an account type")
+    is_operator: yup
+      .boolean()
 });
 
 export default formSchema;
