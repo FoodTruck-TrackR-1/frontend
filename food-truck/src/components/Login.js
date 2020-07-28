@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import * as yup from 'yup'
 
+
 //styles//
 const FormContainer = styled.div `
   display: flex;
@@ -64,21 +65,29 @@ const handleChange = (e) => {
   setLogin({...login,[name]: value})
 
 };
-// const handleLogin = (e) => {
-//   e.preventDefault()
-//   axiosWithAuth()
-  //   .post("/api/auth/login", login)
-  //   .then((res) => {
-        // history.push('/food')
-  //   })
-  //   .catch((err) => console.log('not working', err))
-  // }
-  //(dont forget to add onSubmit={handleLogin} to <form>)
+
+
+const handleLogin = (e) => {
+  e.preventDefault()
+
+  const loginUser = {
+    username: login.username.trim(),
+    password: login.password.trim()
+  }
+
+  
+  axios()
+    .post("https://foodtruck-bw.herokuapp.com/api/auth/login", loginUser)
+    .then((res) => {
+        setLogin(initialFormValues)
+    })
+    .catch((err) => console.log('not working', err))
+  }
 
 console.log(login)
   return (
     <FormContainer className='container'>
-      <form >
+      <form onSubmit={handleLogin} >
         {errors.username.length > 0 && <p>{errors.username}</p>}
         <div className='header'>
           <p>Welcome to<br/>Foodtruck TrackR</p>
@@ -106,7 +115,7 @@ console.log(login)
           <label>
             Login as:
             <select name='user' value={login.user} onChange={handleChange}>
-              <option value=''>-Select accout type-</option>
+              <option value=''>-Select account type-</option>
               <option value='operator'>Truck Owner</option>
               <option value='diner'>User</option>
             </select>
