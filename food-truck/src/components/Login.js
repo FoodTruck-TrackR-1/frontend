@@ -49,6 +49,7 @@ const formSchema = yup.object().shape({
 useEffect(() => {
   formSchema.isValid(login)
     .then(valid => setDisable(!valid))
+    // TODO: May have to clean up --getting error referenced in slack...
 },[login])
 
 const validateForm = (e) => {
@@ -66,6 +67,7 @@ const handleChange = (e) => {
 
 };
 
+const { push } = useHistory();
 
 const handleLogin = (e) => {
   e.preventDefault()
@@ -76,10 +78,12 @@ const handleLogin = (e) => {
   }
 
   
-  axios()
+  axios
     .post("https://foodtruck-bw.herokuapp.com/api/auth/login", loginUser)
     .then((res) => {
+        localStorage.setItem('token', res.data.token)
         setLogin(initialFormValues)
+        push('/food')
     })
     .catch((err) => console.log('not working', err))
   }
@@ -112,14 +116,14 @@ console.log(login)
             onChange={handleChange}
             />
           </label>
-          <label>
+          {/* <label>
             Login as:
             <select name='user' value={login.user} onChange={handleChange}>
               <option value=''>-Select account type-</option>
               <option value='operator'>Truck Owner</option>
               <option value='diner'>User</option>
             </select>
-          </label>
+          </label> */}
           <button disabled={disable} type='submit'>Login</button>
           </div>
       </form>
