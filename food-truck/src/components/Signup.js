@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as yup from 'yup';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 import formSchema from './formSchema';
-import Axios from "axios";
 
 const FormContainer = styled.div `
   display: flex;
@@ -29,7 +29,7 @@ const initFormValues = {
   username: '',
   password: '',
   validPassword: '',
-  accountType: ''
+  is_operator: false
 }
 
 const initErrorValues = {
@@ -97,6 +97,17 @@ const Signup = () => {
       });
   };
 
+  const onCheckboxChange = (evt) => {
+    const { name } = evt.target;
+    const isChecked = evt.target.checked;
+    setFormValues({
+      ...formValues,
+      [name]: isChecked,
+    });
+  };
+
+  const { push } = useHistory();
+
   const onSubmit = (evt) => {
     evt.preventDefault()
 
@@ -104,14 +115,16 @@ const Signup = () => {
       name: formValues.name.trim(),
       username: formValues.username.trim(),
       password: formValues.password.trim(),
-      userType: formValues.accountType
+      is_operator: formValues.is_operator
     }
 
     axios.post('https://foodtruck-bw.herokuapp.com/api/auth/register', newUser)
       .then(res => {
         alert("User account has been created, thank you!");
+        localStorage.setItem('token', res.data.token);
         setFormValues(initFormValues);
-        console.log(res)
+        console.log(res.data)
+        push('/food')
       }).catch(err => {
         console.log(err)
       })
@@ -168,11 +181,18 @@ const Signup = () => {
           <label>Confirm Password: </label>
           <input type='password' name='validPassword' placeholder='Confirm Password' value={formValues.validPassword} onChange={onValidPassErr}/>
           <label>Sign Up As: </label>
-          <select onChange={formValueChange} value={formValues.accountType} name='accountType'>
+          {/* <select onChange={formValueChange} value={formValues.accountType} name='accountType'>
             <option disabled value=''>- Select account type -</option>
             <option value='diner'>User</option>
             <option value='operator'>Truck Owner</option>
-          </select>
+          </select> */}
+          <label>Food Truck Operator?:&nbsp;</label>
+          <input
+            checked={formValues.is_operator}
+            onChange={onCheckboxChange}
+            name='is_operator'
+            type='checkbox'
+          />
           <div className='form-submit-container'>
             <button disabled={btnDisable} type='submit' value='Submit'>Sign Up</button>
           </div>
