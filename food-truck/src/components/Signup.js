@@ -11,6 +11,7 @@ const FormContainer = styled.div `
   flex-direction: column;
   margin-left: 20%;
   margin-right: 20%;
+  border: 1px solid rgba(107,202,226, 1);
 
   .form-header {
     text-align: center;
@@ -75,6 +76,10 @@ const FormContainer = styled.div `
 
   button:enabled:hover {
     transform: translateY(-3px);
+  }
+
+  button:focus {
+    outline: none;
   }
 `;
 
@@ -225,13 +230,13 @@ const Signup = () => {
         </div>
         <div className='form-inputs'>
           <label>Name: </label>
-          <input className="input-style" type='text' name='name' placeholder='Name' value={formValues.name} onChange={formValueChange}/>
+          <input className="input-style" type='text' name='name' placeholder='John' value={formValues.name} onChange={formValueChange}/>
           <label>Username: </label>
-          <input className="input-style" type='text'name='username' placeholder='Username' value={formValues.username} onChange={formValueChange}/>
+          <input className="input-style" type='text'name='username' placeholder='JohnnyAppleseed' value={formValues.username} onChange={formValueChange}/>
           <label>Password: </label>
-          <input className="input-style" type='password' name='password' placeholder='Password' value={formValues.password} onChange={formValueChange}/>
+          <input className="input-style" type='password' name='password' placeholder='**********' value={formValues.password} onChange={formValueChange}/>
           <label>Confirm Password: </label>
-          <input className="input-style" type='password' name='validPassword' placeholder='Confirm Password' value={formValues.validPassword} onChange={onValidPassErr}/>
+          <input className="input-style" type='password' name='validPassword' placeholder='**********' value={formValues.validPassword} onChange={onValidPassErr}/>
           <label>Sign Up As: </label>
           {/* <select onChange={formValueChange} value={formValues.accountType} name='accountType'>
             <option disabled value=''>- Select account type -</option>
