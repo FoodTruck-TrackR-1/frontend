@@ -4,7 +4,9 @@ import styled from "styled-components";
 import axios from "axios";
 import * as yup from "yup";
 import UserContext from "../contexts/UserContext";
+
 import { useQuery } from "react-query";
+
 
 //styles//
 const FormContainer = styled.div`
@@ -22,6 +24,9 @@ const FormContainer = styled.div`
     width: 30%;
     margin: 0 auto;
   }
+  .errors {
+    color: red;
+  }
 `;
 
 const initialFormValues = {
@@ -33,33 +38,46 @@ const Login = () => {
   const [login, setLogin] = useState(initialFormValues);
   const [disable, setDisable] = useState(true);
   const [errors, setErrors] = useState(initialFormValues);
-
   const { user, setUser } = useContext(UserContext);
 
   const formSchema = yup.object().shape({
-    username: yup.string().required("please enter valid username"),
-    password: yup.string().required("please enter password"),
-    //how do i ensure username is a valid username?//
+    username: yup
+    .string()
+    .min(1, "you must provide a username")
+    .required("username is required"),
+    password: yup
+    .string()
+    .min(1, "You must provide a password")
+    .required("Password is required"),
   });
 
   useEffect(() => {
-    formSchema.isValid(login).then((valid) => setDisable(!valid));
+    formSchema.isValid(login)
+    .then((valid) => 
+    setDisable(!valid));
     // TODO: May have to clean up --getting error referenced in slack...
   }, [formSchema, login]);
 
-  const validateForm = (e) => {
-    yup
-      .reach(login, "username")
-      .validate(e.target.value)
-      .then(() => setErrors({ ...errors, [e.target.username]: "" }))
-      .catch((err) =>
-        setErrors({ ...errors, [e.target.username]: err.errors })
-      );
-  };
-
+ 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+
+    yup
+    .reach(formSchema, name)
+    .validate(value)
+    .then(valid => {
+      setErrors({
+        ...errors,
+        [name]: ''
+      })
+    }).catch(err => {
+      setErrors({
+        ...errors,
+        [name]: err.errors
+      })
+    });
+
     setLogin({ ...login, [name]: value });
   };
 
@@ -71,6 +89,7 @@ const Login = () => {
       username: login.username.trim(),
       password: login.password.trim(),
     };
+
     axios
       .post("https://foodtruck-bw.herokuapp.com/api/auth/login", loginUser)
       .then((res) => {
@@ -84,7 +103,7 @@ const Login = () => {
   return (
     <FormContainer className='container'>
       <form onSubmit={handleLogin}>
-        {errors.username.length > 0 && <p>{errors.username}</p>}
+      
         <div className='header'>
           <p>
             Welcome to
@@ -92,6 +111,10 @@ const Login = () => {
             Food Truck TrackR
           </p>
           <h2>Login</h2>
+        </div>
+        <div className='errors'>
+          <p>{errors.username}</p>
+          <p>{errors.password}</p>
         </div>
         <div className='inputs'>
           <label>
@@ -101,7 +124,7 @@ const Login = () => {
               value={login.username}
               type='textbox'
               onChange={handleChange}
-            />
+              />
           </label>
           <label>
             Password:
