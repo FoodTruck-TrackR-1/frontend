@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 
 import UserContext from "../contexts/UserContext";
+import useMyTrucks from "../queries/useMyTrucks";
 
 import OperatorTrucksList from "./OperatorTrucksList";
 import OperatorMenuForm from "./OperatorMenuForm";
 import OperatorTruckForm from "./OperatorTruckForm";
-import useMyTrucks from "../queries/useMyTrucks";
+import OperatorTruckMenu from "./OperatorTruckMenu";
 
 const OperatorPageContainer = styled.div`
   display: flex;
@@ -15,8 +16,8 @@ const OperatorPageContainer = styled.div`
 
 export default function OperatorPage() {
   const { user } = useContext(UserContext);
-  console.log("operator page render");
-  
+  console.log("OperatorPage -> user", user);
+
   const myTrucks = useMyTrucks({ user });
 
   return (
@@ -24,15 +25,7 @@ export default function OperatorPage() {
       <OperatorTrucksList user={user} />
       <OperatorTruckForm />
       <OperatorMenuForm />
-
-      <div className='truck-menu container'>
-        <h3>Taco Truck Menu</h3>
-        <ul>
-          <li className='container'>Chicken Tacos ...... $5.99</li>
-          <li className='container'>Barbacoa Tacos ...... $6.99</li>
-          <li className='container'>Rice n Beans ....... $2.99</li>
-        </ul>
-      </div>
+      <OperatorTruckMenu />
     </OperatorPageContainer>
   );
 }
