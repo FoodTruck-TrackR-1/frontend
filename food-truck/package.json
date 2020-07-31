@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bit/bondz.react-epic-spinners.atom-spinner": "file:./components/atom-spinner",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -40,5 +41,10 @@
   },
   "devDependencies": {
     "react-query-devtools": "^2.4.1"
+  },
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
   }
 }
