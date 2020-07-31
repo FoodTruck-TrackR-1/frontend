@@ -1,11 +1,11 @@
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery, queryCache } from "react-query";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 export default function useAllTrucks() {
-  return useQuery("allFoodTrucks", () => {
-    return axiosWithAuth()
+  return useQuery("allFoodTrucks", async () => {
+    return await axiosWithAuth()
       .get(`diners/trucks`)
-      .then((res) => res.data.data);
+      .then((res) => res.data?.data);
   });
 }

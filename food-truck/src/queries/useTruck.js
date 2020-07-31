@@ -2,16 +2,17 @@ import React from "react";
 import { useQuery } from "react-query";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 
-export default function useMyTrucks({ user }) {
+export default function useTruck({ truck_id }) {
   return useQuery(
-    ["operator", user.id, "trucks"],
+    ['truck', truck_id],
     async () => {
       return await axiosWithAuth()
-        .get(`operators/${user.id}/trucks`)
+        .get(`diners/trucks/${truck_id}`)
         .then((res) => res.data.data);
     },
     {
-      staleTime: 20000,
+      staleTime: 0,
+      enabled: truck_id,
     }
   );
 }

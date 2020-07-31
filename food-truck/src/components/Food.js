@@ -2,17 +2,17 @@ import React, { useEffect } from "react";
 import jwt from "jsonwebtoken";
 
 import UserContext from "../contexts/UserContext";
+import TruckContext from "../contexts/TrucksContext";
 
 import DinerPage from "./DinerPage";
 import OperatorPage from "./OperatorPage";
 import useAllTrucks from "../queries/useAllTrucks";
 
-const BASE_URL = "https://foodtruck-bw.herokuapp.com/api/";
-
 const Food = () => {
   const { user, setUser } = React.useContext(UserContext);
 
-  // querying for all trucks (to kind of prefetch for DinerPage) -- STILL LEARNING :)
+  // querying for all trucks (
+  // --> to kind of prefetch for DinerPage? ...maybec? -- still learning
   const allTrucks = useAllTrucks();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Food = () => {
       username: decodedUser.username,
       name: decodedUser.name,
     });
-    console.log("Food decode useEffect");
+    console.log("Food -> decoding token in useEffect");
   }, [setUser]);
 
   if (user.id && user.is_operator === true) {
