@@ -2,16 +2,16 @@ import React from "react";
 import { useQuery } from "react-query";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 
-export default function useMyTrucks({ user }) {
+export default function useFav({ user, truck }) {
   return useQuery(
-    ["operator", user.id, "trucks"],
+    `diner/${user.id}/favorite/${truck.id}`,
     async () => {
       return await axiosWithAuth()
-        .get(`operators/${user.id}/trucks`)
+        .get(`diners/favorites`)
         .then((res) => res.data.data);
     },
     {
-      staleTime: 20000,
+      staleTime: 5000,
     }
   );
 }
