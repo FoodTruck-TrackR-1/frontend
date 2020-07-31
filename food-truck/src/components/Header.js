@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 
 const Header = () => {
+  const logoutToken = () => {
+    localStorage.removeItem("token");
+  };
+
   return (
     <div className='nav-bar'>
       <h1>Food Truck Tracker</h1>
@@ -18,6 +22,11 @@ const Header = () => {
         </li>
         <li>
           <Link to='/'>Home</Link>
+        </li>
+        <li>
+          <Link to='/' onClick={logoutToken}>
+            Log Out
+          </Link>
         </li>
       </ul>
     </div>
