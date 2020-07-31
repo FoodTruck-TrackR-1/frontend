@@ -1,28 +1,43 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import styled from "styled-components";
 import axios from "axios";
 import * as yup from "yup";
 import UserContext from "../contexts/UserContext";
+import { Button, TextField, makeStyles  } from '@material-ui/core';
 import { useQuery } from "react-query";
 
 //styles//
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 5% 35%;
-  padding: 10px;
-
-  .header {
-    text-align: center;
+const useStyle = makeStyles(theme =>({
+  root: {
+    display: 'flex',
+    textAlign: 'center',
+    width: '40%',
+    marginLeft: '30%',
+    marginTop: '3%',
+    padding: '3%',
+    borderRadius: '20px',
+    boxShadow: '0px 1px 6px -2px rgb(128, 127, 127)',
+    fontFamily: 'Montserrat, sans-serif',
+    
+    '& .MuiFormControl-root':{
+      width: '90%',
+      margin:theme.spacing(1)
+    }
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+    width: '50%',
+  },
+  title: {
+    fontSize: '1.5rem',
   }
-  .inputs {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    margin: 0 auto;
-  }
-`;
+}))
+//end of styles//
 
 const initialFormValues = {
   username: "",
@@ -33,33 +48,47 @@ const Login = () => {
   const [login, setLogin] = useState(initialFormValues);
   const [disable, setDisable] = useState(true);
   const [errors, setErrors] = useState(initialFormValues);
-
   const { user, setUser } = useContext(UserContext);
 
+  const classes = useStyle();
+
   const formSchema = yup.object().shape({
-    username: yup.string().required("please enter valid username"),
-    password: yup.string().required("please enter password"),
-    //how do i ensure username is a valid username?//
+    username: yup
+    .string()
+    .min(1, "You must provide a username")
+    .required("username is required"),
+    password: yup
+    .string()
+    .min(1, "You must provide a password")
+    .required("Password is required"),
   });
 
   useEffect(() => {
-    formSchema.isValid(login).then((valid) => setDisable(!valid));
+    formSchema.isValid(login)
+    .then((valid) => 
+    setDisable(!valid));
     // TODO: May have to clean up --getting error referenced in slack...
   }, [formSchema, login]);
-
-  const validateForm = (e) => {
-    yup
-      .reach(login, "username")
-      .validate(e.target.value)
-      .then(() => setErrors({ ...errors, [e.target.username]: "" }))
-      .catch((err) =>
-        setErrors({ ...errors, [e.target.username]: err.errors })
-      );
-  };
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+
+    yup
+    .reach(formSchema, name)
+    .validate(value)
+    .then(valid => {
+      setErrors({
+        ...errors,
+        [name]: ''
+      })
+    }).catch(err => {
+      setErrors({
+        ...errors,
+        [name]: err.errors
+      })
+    });
+
     setLogin({ ...login, [name]: value });
   };
 
@@ -71,6 +100,7 @@ const Login = () => {
       username: login.username.trim(),
       password: login.password.trim(),
     };
+
     axios
       .post("https://foodtruck-bw.herokuapp.com/api/auth/login", loginUser)
       .then((res) => {
@@ -82,42 +112,51 @@ const Login = () => {
       .catch((err) => console.log("not working", err));
   };
   return (
-    <FormContainer className='container'>
-      <form onSubmit={handleLogin}>
-        {errors.username.length > 0 && <p>{errors.username}</p>}
+    <div className={classes.root}>
+      <form  onSubmit={handleLogin}>
+      
         <div className='header'>
-          <p>
+          <p className={classes.title}>
             Welcome to
             <br />
             Food Truck TrackR
           </p>
-          <h2>Login</h2>
         </div>
-        <div className='inputs'>
-          <label>
-            Username:
-            <input
-              name='username'
-              value={login.username}
-              type='textbox'
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Password:
-            <input
-              name='password'
-              value={login.password}
-              type='password'
-              onChange={handleChange}
-            />
-          </label>
-          <button disabled={disable} type='submit'>
-            Login
-          </button>
+        <div className='errors'>
+          <p>{errors.username}</p>
+          <p>{errors.password}</p>
+        </div>
+        <div className='inputContainer'>
+          <div className='inputs'>
+            <label>
+              <TextField
+                required 
+                label="Username"
+                variant="outlined"
+                name='username'
+                value={login.username}
+                type='textbox'
+                onChange={handleChange}
+                />
+            </label>
+            <label>
+              <TextField
+                required 
+                label="Password"
+                variant="outlined"
+                name='password'
+                value={login.password}
+                type='password'
+                onChange={handleChange}
+              />
+            </label>
+            <Button className={classes.submit} disabled={disable} type='submit'>
+              Login
+            </Button>
+          </div>
         </div>
       </form>
-    </FormContainer>
+    </div>
   );
 };
 
