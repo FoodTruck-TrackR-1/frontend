@@ -11,6 +11,7 @@ const FormContainer = styled.div `
   flex-direction: column;
   margin-left: 20%;
   margin-right: 20%;
+  border: 1px solid rgba(107,202,226, 1);
 
   .form-header {
     text-align: center;
@@ -21,6 +22,64 @@ const FormContainer = styled.div `
     flex-direction: column;
     width: 50%;
     margin: 0 auto;
+  }
+
+  .form-submit-container {
+    padding-top: 12px;
+  }
+
+  input[type=text] {
+    border: 1px solid #b5b5b5;
+  }
+
+  input[type=password] {
+    border: 1px solid #b5b5b5;
+  }
+
+  input[type=text]:focus {
+    transition: all .4s ease-in;
+  }
+
+  input[type=password]:focus {
+    transition: all .4s ease-in;
+  }
+
+  .input-style {
+    width: 100%;
+    height: 50px;
+    border-radius: 12px;
+  }
+
+  .input-style:focus {
+    border: 1px solid rgba(107,202,226, 1);
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  button {
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  button:disabled {
+    background: rgba(128, 179, 191, 1);
+  }
+
+  button:enabled{
+    background: rgba(107,202,226, 1);
+    transition: all 0.5s ease-in-out;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  button:enabled:hover {
+    transform: translateY(-3px);
+  }
+
+  button:focus {
+    outline: none;
   }
 `;
 
@@ -120,10 +179,8 @@ const Signup = () => {
 
     axios.post('https://foodtruck-bw.herokuapp.com/api/auth/register', newUser)
       .then(res => {
-        alert("User account has been created, thank you!");
         localStorage.setItem('token', res.data.token);
         setFormValues(initFormValues);
-        console.log(res.data)
         push('/food')
       }).catch(err => {
         console.log(err)
@@ -173,13 +230,13 @@ const Signup = () => {
         </div>
         <div className='form-inputs'>
           <label>Name: </label>
-          <input type='text' name='name' placeholder='Name' value={formValues.name} onChange={formValueChange}/>
+          <input className="input-style" type='text' name='name' placeholder='John' value={formValues.name} onChange={formValueChange}/>
           <label>Username: </label>
-          <input type='text'name='username' placeholder='Username' value={formValues.username} onChange={formValueChange}/>
+          <input className="input-style" type='text'name='username' placeholder='JohnnyAppleseed' value={formValues.username} onChange={formValueChange}/>
           <label>Password: </label>
-          <input type='password' name='password' placeholder='Password' value={formValues.password} onChange={formValueChange}/>
+          <input className="input-style" type='password' name='password' placeholder='**********' value={formValues.password} onChange={formValueChange}/>
           <label>Confirm Password: </label>
-          <input type='password' name='validPassword' placeholder='Confirm Password' value={formValues.validPassword} onChange={onValidPassErr}/>
+          <input className="input-style" type='password' name='validPassword' placeholder='**********' value={formValues.validPassword} onChange={onValidPassErr}/>
           <label>Sign Up As: </label>
           {/* <select onChange={formValueChange} value={formValues.accountType} name='accountType'>
             <option disabled value=''>- Select account type -</option>
@@ -194,7 +251,7 @@ const Signup = () => {
             type='checkbox'
           />
           <div className='form-submit-container'>
-            <button disabled={btnDisable} type='submit' value='Submit'>Sign Up</button>
+            <button className="input-style" disabled={btnDisable} type='submit' value='Submit'>Sign Up</button>
           </div>
         </div>
       </form>

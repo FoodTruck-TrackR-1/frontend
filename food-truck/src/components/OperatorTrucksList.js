@@ -3,7 +3,7 @@ import useMyTrucks from "../queries/useMyTrucks";
 
 export default function OperatorTrucksList({ user }) {
   const myTrucks = useMyTrucks({ user });
-  console.log("OperatorTrucksList -> myTrucks", myTrucks);
+  // console.log("OperatorTrucksList -> myTrucks data", myTrucks.data);
 
   return (
     <div className='owned-trucks container'>
