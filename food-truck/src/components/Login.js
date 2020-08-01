@@ -1,28 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import * as yup from "yup";
-import UserContext from "../contexts/UserContext";
-import { Button, TextField, makeStyles  } from '@material-ui/core';
-import { useQuery } from "react-query";
+
+import { Button, TextField, makeStyles } from "@material-ui/core";
 
 //styles//
-const useStyle = makeStyles(theme =>({
+const useStyle = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    textAlign: 'center',
-    width: '40%',
-    marginLeft: '30%',
-    marginTop: '3%',
-    padding: '3%',
-    borderRadius: '20px',
-    boxShadow: '0px 1px 6px -2px rgb(128, 127, 127)',
-    fontFamily: 'Montserrat, sans-serif',
-    
-    '& .MuiFormControl-root':{
-      width: '90%',
-      margin:theme.spacing(1)
-    }
+    display: "flex",
+    textAlign: "center",
+    width: "40%",
+    marginLeft: "30%",
+    marginTop: "3%",
+    padding: "3%",
+    borderRadius: "20px",
+    boxShadow: "0px 1px 6px -2px rgb(128, 127, 127)",
+    fontFamily: "Montserrat, sans-serif",
+
+    "& .MuiFormControl-root": {
+      width: "90%",
+      margin: theme.spacing(1),
+    },
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -31,12 +30,12 @@ const useStyle = makeStyles(theme =>({
     borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
-    width: '50%',
+    width: "50%",
   },
   title: {
-    fontSize: '1.5rem',
-  }
-}))
+    fontSize: "1.5rem",
+  },
+}));
 //end of styles//
 
 const initialFormValues = {
@@ -48,25 +47,22 @@ const Login = () => {
   const [login, setLogin] = useState(initialFormValues);
   const [disable, setDisable] = useState(true);
   const [errors, setErrors] = useState(initialFormValues);
-  const { user, setUser } = useContext(UserContext);
 
   const classes = useStyle();
 
   const formSchema = yup.object().shape({
     username: yup
-    .string()
-    .min(1, "You must provide a username")
-    .required("username is required"),
+      .string()
+      .min(1, "You must provide a username")
+      .required("username is required"),
     password: yup
-    .string()
-    .min(1, "You must provide a password")
-    .required("Password is required"),
+      .string()
+      .min(1, "You must provide a password")
+      .required("Password is required"),
   });
 
   useEffect(() => {
-    formSchema.isValid(login)
-    .then((valid) => 
-    setDisable(!valid));
+    formSchema.isValid(login).then((valid) => setDisable(!valid));
     // TODO: May have to clean up --getting error referenced in slack...
   }, [formSchema, login]);
 
@@ -75,19 +71,20 @@ const Login = () => {
     const value = e.target.value;
 
     yup
-    .reach(formSchema, name)
-    .validate(value)
-    .then(valid => {
-      setErrors({
-        ...errors,
-        [name]: ''
+      .reach(formSchema, name)
+      .validate(value)
+      .then((valid) => {
+        setErrors({
+          ...errors,
+          [name]: "",
+        });
       })
-    }).catch(err => {
-      setErrors({
-        ...errors,
-        [name]: err.errors
-      })
-    });
+      .catch((err) => {
+        setErrors({
+          ...errors,
+          [name]: err.errors,
+        });
+      });
 
     setLogin({ ...login, [name]: value });
   };
@@ -113,8 +110,7 @@ const Login = () => {
   };
   return (
     <div className={classes.root}>
-      <form  onSubmit={handleLogin}>
-      
+      <form onSubmit={handleLogin}>
         <div className='header'>
           <p className={classes.title}>
             Welcome to
@@ -130,20 +126,20 @@ const Login = () => {
           <div className='inputs'>
             <label>
               <TextField
-                required 
-                label="Username"
-                variant="outlined"
+                required
+                label='Username'
+                variant='outlined'
                 name='username'
                 value={login.username}
                 type='textbox'
                 onChange={handleChange}
-                />
+              />
             </label>
             <label>
               <TextField
-                required 
-                label="Password"
-                variant="outlined"
+                required
+                label='Password'
+                variant='outlined'
                 name='password'
                 value={login.password}
                 type='password'

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import jwt from "jsonwebtoken";
 
 import UserContext from "../contexts/UserContext";
-import TruckContext from "../contexts/TrucksContext";
 
 import DinerPage from "./DinerPage";
 import OperatorPage from "./OperatorPage";

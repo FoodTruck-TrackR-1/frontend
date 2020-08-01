@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery, queryCache } from "react-query";
+import { useQuery } from "react-query";
 import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 export default function useAllTrucks() {

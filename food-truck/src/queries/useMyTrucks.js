@@ -11,7 +11,7 @@ export default function useMyTrucks({ user }) {
         .then((res) => res.data.data);
     },
     {
-      staleTime: 20000,
+      cacheTime: 20000,
     }
   );
 }
